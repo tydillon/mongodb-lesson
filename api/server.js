@@ -31,7 +31,7 @@ app.get('/students', function(req, res) {
 
 //this is hard coded. We want to change this
 app.post('/students', function(req, res) {
-  const rawStudent = request.body
+  const rawStudent = req.body
 
   const newStudent = new Student(rawStudent)
   //this stores it in the database
