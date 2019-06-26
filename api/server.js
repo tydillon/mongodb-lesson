@@ -6,6 +6,27 @@ mongoose.connect('mongodb://localhost:27017/students', {
   useNewUrlParser: true
 })
 
+//create a mongoose schema
+const Student = mongoose.Schema({
+  name: {
+    type: String,
+    require: true,
+    unique: true
+  },
+  age: {
+    type: Number
+  },
+  photoUrl: {
+    type: String
+  },
+  bio: {
+    type: String
+  }
+})
+
+//assigned the schema to the mongoose model
+const Student = mongoose.model('Student', StudentSchema)
+
 const app = express()
 
 //define the route, then provide the
@@ -27,6 +48,10 @@ app.post('/students', function(req, res) {
 app.get('/students/:studentId', function(req, res) {
   res.json({ studentId: req.params.studentId })
 })
+
+app.put('/students/:studentId', function(req, res) {})
+
+app.delete('/students/:studentId', function(req, res) {})
 
 //turns the app on
 app.listen(8000, function() {
