@@ -12,9 +12,9 @@ mongoose.connect('mongodb://localhost:27017/students', {
 
 //SOMETHING WRONG WITH CORS
 const app = express()
+app.use(cors())
 app.use(bodyParser())
 app.use('/students', StudentRoutes)
-app.use(cors())
 
 //turns the app on
 app.listen(8000, function() {
