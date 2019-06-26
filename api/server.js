@@ -38,7 +38,11 @@ app.get('/', function(req, res) {
 })
 
 app.get('/students', function(req, res) {
-  res.json({ status: 'under construction' })
+  //Student connects to Mongo. Find is pulling it out from Mongo, then students comes back
+  //Server sends it back as JSON to the browser
+  Student.find({}).then(function(students) {
+    res.json({ status: 'ok', data: students })
+  })
 })
 
 app.post('/students', function(req, res) {
