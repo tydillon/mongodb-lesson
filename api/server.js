@@ -59,11 +59,31 @@ app.post('/students', function(req, res) {
   res.json({ status: 'ok', newStudent })
 })
 
+//querying the database by id, finding student, sending it back
 app.get('/students/:studentId', function(req, res) {
-  res.json({ studentId: req.params.studentId })
+  Student.findById(req.params.studentId).then(function(foundStudent) {
+    res.json(foundStudent)
+  })
 })
 
-app.put('/students/:studentId', function(req, res) {})
+//update a student by id
+app.put('/students/:studentId', function(req, res) {
+  // const updatedStudent = {
+  //     name: req.body.name,
+  //     age: req.body.age,
+  //     photoUrl: req.body.photoUrl,
+  //     bio: req.body.bio
+  //   }
+  Student.findById(req.params.studentId).then(function(foundStudent) {
+    foundStudent.name = req.body.name
+    foundStudent.age = req.body.age
+    foundStudent.photoUrl = req.body.photoUrl
+    foundStudent.bio = req.body.bio
+    foundStudent.save()
+    res.json(foundStudent)
+  })
+  //   Student.update(req.params.studentId)
+})
 
 app.delete('/students/:studentId', function(req, res) {})
 
