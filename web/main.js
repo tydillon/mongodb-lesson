@@ -3,31 +3,30 @@ const page = {
   init: function() {
     page
       .getStudents()
-      .then(function(students) {
-        console.log('STUDENTS', students)
-        page.addStudentsToPage(students.data)
-      })
-      .then(function() {
-        page.initEvents()
-      })
+      .then(students => page.addStudentsToPage(students.data))
+      .then(page.initEvents())
   },
   initEvents: function() {
-    page.clickDetails()
-    page.deleteStudentEvent()
+    page.clickOptions()
   },
-  clickDetails: function() {
+  clickOptions: function() {
     document.addEventListener('click', function(e) {
       e.preventDefault()
       const data = e.target.dataset
       const isMoreDetail = e.target.classList.contains('detailLink')
-      //data.id contains id
-      //checking to see what was actually grabbed
-      //   console.log(e.target)
-      //found that e.target.dataset\ contains the id
+      const isDeleteLink = e.target.classList.contains('deleteLink')
+      const submitButton = e.target.classList.contains('submit')
       if (isMoreDetail) {
         page.getSingleStudent(data.id).then(function(student) {
           console.log(student)
         })
+      }
+      if (isDeleteLink) {
+        page.deleteStudentFromApi(data.id)
+        console.log('deleted')
+      }
+      if (submitButton) {
+        page.postNewStudent(page.extractFormData())
       }
     })
   },
@@ -36,19 +35,6 @@ const page = {
       student
     ) {
       return student.json()
-    })
-  },
-  deleteStudentEvent: function() {
-    const $deleteLinks = document.querySelectorAll('.deleteLink')
-    $deleteLinks.forEach(function(deleteLinkDom) {
-      deleteLinkDom.addEventListener('click', function(e) {
-        e.preventDefault()
-        const data = e.target.dataset
-        const isDeleteLink = e.target.classList.contains('deleteLink')
-        if (isDeleteLink) {
-          page.deleteStudentFromApi(data.id)
-        }
-      })
     })
   },
   deleteStudentFromApi: function(studentId) {
@@ -84,6 +70,51 @@ const page = {
     <a class="detailLink" href="#" data-id=${student._id}>More Details</a>
     <a class="deleteLink" href="#" data-id=${student._id}>Delete</a>
     </div>`
+  },
+  postNewStudent: function(newStudent) {
+    return fetch(`http://localhost:8000/students/`, {
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      },
+      method: 'POST',
+      body: JSON.stringify(newStudent)
+    })
+      .then(function(res) {
+        return res.json()
+      })
+      .then(function(data) {
+        return console.log('Created Student!')
+      })
+  },
+  extractFormData: function() {
+    const name = document.querySelector('[name="name"]').value
+    const age = document.querySelector('[name="age"]').value
+    const photoUrl = document.querySelector('[name="photoUrl"]').value
+    const bio = document.querySelector('[name="bio"]').value
+    const newStudent = {
+      name: name,
+      age: age,
+      photoUrl: photoUrl,
+      bio: bio
+    }
+    return newStudent
+  },
+  editStudent: function() {
+    return fetch(`http://localhost:8000/students/${student._id}`, {
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json'
+      },
+      method: 'PUT',
+      body: JSON.stringify(newStudent)
+    })
+      .then(function(res) {
+        return res.json()
+      })
+      .then(function(data) {
+        return console.log('Edited Student!')
+      })
   }
 } // iife = immediately invoked function expression. keeps all of your variables from being global
 
