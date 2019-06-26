@@ -2,32 +2,11 @@
 const express = require('express')
 const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
+const Student = require('./models/Student')
 
 mongoose.connect('mongodb://localhost:27017/students', {
   useNewUrlParser: true
 })
-
-//create a mongoose schema
-const StudentSchema = mongoose.Schema({
-  name: {
-    type: String,
-    require: true,
-    unique: true
-  },
-  age: {
-    type: Number
-  },
-  photoUrl: {
-    type: String
-  },
-  bio: {
-    type: String
-  }
-})
-
-//assigned the schema to the mongoose model
-//SOMETHING IS WRONG HERE
-const Student = mongoose.model('Student', StudentSchema)
 
 const app = express()
 app.use(bodyParser())
