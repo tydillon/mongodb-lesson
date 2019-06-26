@@ -68,24 +68,24 @@ app.get('/students/:studentId', function(req, res) {
 
 //update a student by id
 app.put('/students/:studentId', function(req, res) {
-  // const updatedStudent = {
-  //     name: req.body.name,
-  //     age: req.body.age,
-  //     photoUrl: req.body.photoUrl,
-  //     bio: req.body.bio
-  //   }
   Student.findById(req.params.studentId).then(function(foundStudent) {
     foundStudent.name = req.body.name
     foundStudent.age = req.body.age
     foundStudent.photoUrl = req.body.photoUrl
     foundStudent.bio = req.body.bio
+
     foundStudent.save()
+
     res.json(foundStudent)
   })
   //   Student.update(req.params.studentId)
 })
 
-app.delete('/students/:studentId', function(req, res) {})
+app.delete('/students/:studentId', function(req, response) {
+  Student.findByIdAndDelete(req.params.studentId).then(function(res) {
+    response.json({ status: 'ok', res: res })
+  })
+})
 
 //turns the app on
 app.listen(8000, function() {
