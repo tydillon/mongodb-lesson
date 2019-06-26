@@ -3,6 +3,7 @@ const express = require('express')
 const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
 const Student = require('./models/Student')
+// const StudentRoutes = require('./routes/students,js')
 
 mongoose.connect('mongodb://localhost:27017/students', {
   useNewUrlParser: true
@@ -10,6 +11,7 @@ mongoose.connect('mongodb://localhost:27017/students', {
 
 const app = express()
 app.use(bodyParser())
+// app.use('/students', StudentRoutes)
 
 //define the route, then provide the
 //req= incoming, res= outgoing
