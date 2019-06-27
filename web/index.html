@@ -21,20 +21,25 @@
         </ul>
       </nav>
     </header>
-    <main>
+    <main id="main">
+      <div class="row">
+        <div class="col-3"> 
+        <section id="students">
+          <h1>Students</h1>
+          <div id="studentList"></div>
+        </div>
+        <div class="col-7" id="side"></div>
+        </section>
+      </div>
       <section id="addForm">
-        <form>
-          <input type="text" name="name" placeholder="Name" />
-          <input type="text" name="age" placeholder="Age" />
-          <input type="text" name="photoUrl" placeholder="Photo URL" />
-          <textarea name="bio"> Add Bio information here</textarea>
-          <input type="submit" value="Add New Student" class="submit" />
-        </form>
-      </section>
-      <section id="students">
-        <h1>Students</h1>
-        <div id="studentList"></div>
-      </section>
+            <form>
+              <input type="text" name="name" placeholder="Name" />
+              <input type="text" name="age" placeholder="Age" />
+              <input type="text" name="photoUrl" placeholder="Photo URL" />
+              <textarea name="bio"> Add Bio information here</textarea>
+              <input type="submit" value="Add New Student" class="submit" />
+            </form>
+          </section>
     </main>
     <!-- <footer>
       <nav>

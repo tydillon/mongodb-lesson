@@ -6,7 +6,7 @@ const page = {
       .then(students => page.addStudentsToPage(students.data))
       .then(page.initEvents())
       .then(() => {
-        page.hideAllModals()
+        // page.hideAllModals()
         page.showStudents()
       })
   },
@@ -25,7 +25,8 @@ const page = {
       const editButton = e.target.classList.contains('edit')
       if (isMoreDetail) {
         page.getSingleStudent(data.id).then(function(student) {
-          page.showADetailModal(student._id)
+          page.addDetailsToModal(student)
+          //   page.showModal()
         })
       }
       if (isDeleteLink) {
@@ -33,7 +34,10 @@ const page = {
         console.log('deleted')
       }
       if (isEditLink) {
-        page.showAnEditModal(data.id)
+        page.getSingleStudent(data.id).then(function(student) {
+          page.addEditToModal(student)
+          //   page.showModal()
+        })
       }
       if (submitButton) {
         page.postNewStudent(page.extractFormData())
@@ -53,7 +57,6 @@ const page = {
           .then(students => page.addStudentsToPage(students.data))
       }
       if (editButton) {
-        // page.editStudent(page.extractFormData())
         page.editStudent(page.extractEditFormData(data.id))
         console.log('edited')
       }
@@ -91,25 +94,33 @@ const page = {
     $studentsList.innerHTML = html
   },
   singleStudentTemplate: function(student) {
-    return `<div data-id=${student._id}>
+    return `
+    <div data-id=${student._id}>
     <h3>${student.name}</h3>
     <a class="detailLink" href="#" data-id=${student._id}>More Details</a>
     <a class="deleteLink" href="#" data-id=${student._id}>Delete</a>
     <a class="editLink" href="#" data-id=${student._id}>Edit</a>
-    <div class="modal" id="modal_${student._id}">
-    <div class="modal-content">
-        <span class="close">&times;</span>
-        <h1>${student.name}</h1>
-        <img src="${student.photoUrl}">
-        <p>${student.age}</p>
-        <p>${student.bio}</p>
-    </div>
-    </div>
-    <div class="modal" id="edit_${student._id}" data-id="${student._id}">
-    <div class="modal-content">
-        <span class="close">&times;</span>
+    </div>`
+  },
+  //   <div class="modal-content">
+  //       <span class="close">&times;</span></div>
+  detailTemplate: function(student) {
+    return `
+      <h1>${student.name}</h1>
+      <img src="${student.photoUrl}">
+      <p>${student.age}</p>
+      <p>${student.bio}</p>
+      </div>`
+  },
+  addDetailsToModal: function(student) {
+    document.getElementById('side').innerHTML = page.detailTemplate(student)
+  },
+  addEditToModal: function(student) {
+    document.getElementById('side').innerHTML = page.editTemplate(student)
+  },
+  editTemplate: function(student) {
+    return `
         <h1>Edit ${student.name}</h1>
-        <p>id: <span id="student-id">${student._id}</span></p>
         <form>
           Name: <input type="text" name="name" class="id_${
             student._id
@@ -126,10 +137,7 @@ const page = {
           <input type="submit" value="Edit Student" class="edit" data-id="${
             student._id
           }" />
-        </form>
-    </div>
-    </div>
-    </div>`
+        </form>`
   },
   postNewStudent: function(newStudent) {
     return fetch(`http://localhost:8000/students/`, {
@@ -139,13 +147,9 @@ const page = {
       },
       method: 'POST',
       body: JSON.stringify(newStudent)
+    }).then(function(res) {
+      return res.json()
     })
-      .then(function(res) {
-        return res.json()
-      })
-      .then(function(data) {
-        return console.log('Created Student!')
-      })
   },
   extractFormData: function() {
     const name = document.querySelector(`[name="name"]`).value
@@ -184,33 +188,29 @@ const page = {
       },
       method: 'PUT',
       body: JSON.stringify(student)
+    }).then(function(res) {
+      return res.json()
     })
-      .then(function(res) {
-        return res.json()
-      })
-      .then(function(data) {
-        return console.log('Edited Student!')
-      })
   },
   //showing and hiding elements
   showStudents: function() {
     document.getElementById('students').style.display = 'block'
+    document.getElementById('side').style.display = 'inline-block'
     document.getElementById('addForm').style.display = 'none'
   },
   showForm: function() {
     document.getElementById('students').style.display = 'none'
+    document.getElementById('side').style.display = 'none'
     document.getElementById('addForm').style.display = 'block'
   },
-  hideAllModals: function() {
-    const $modals = document.querySelectorAll('.modal')
-    $modals.forEach(modal => (modal.style.display = 'none'))
-  },
-  showADetailModal: function(studentId) {
-    document.getElementById(`modal_${studentId}`).style.display = 'block'
-  },
-  showAnEditModal: function(studentId) {
-    document.getElementById(`edit_${studentId}`).style.display = 'block'
-  },
+  //   hideAllModals: function() {
+  //     document.getElementById(`modal`).style.display = 'none'
+  //     // const $modals = document.querySelector('#modal')
+  //     // $modals.forEach(modal => (modal.style.display = 'none'))
+  //   },
+  //   showModal: function() {
+  //     document.getElementById(`modal`).style.display = 'block'
+  //   },
   clearStudents: function() {
     document.querySelector('#studentList').innerHTML = ''
   }
