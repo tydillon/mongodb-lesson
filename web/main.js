@@ -5,13 +5,16 @@ const page = {
       .getStudents()
       .then(students => page.addStudentsToPage(students.data))
       .then(page.initEvents())
-      .then(() => {
-        // page.hideAllModals()
-        page.showStudents()
-      })
+      .then(page.showStudents())
   },
   initEvents: function() {
     page.clickOptions()
+  },
+  reloadStudents: function() {
+    page
+      .getStudents()
+      .then(students => page.addStudentsToPage(students.data))
+      .then(page.showStudents())
   },
   clickOptions: function() {
     document.addEventListener('click', function(e) {
@@ -21,12 +24,10 @@ const page = {
       const isDeleteLink = e.target.classList.contains('deleteLink')
       const isEditLink = e.target.classList.contains('editLink')
       const submitButton = e.target.classList.contains('submit')
-      const closeButton = e.target.classList.contains('close')
       const editButton = e.target.classList.contains('edit')
       if (isMoreDetail) {
         page.getSingleStudent(data.id).then(function(student) {
           page.addDetailsToModal(student)
-          //   page.showModal()
         })
       }
       if (isDeleteLink) {
@@ -36,25 +37,16 @@ const page = {
       if (isEditLink) {
         page.getSingleStudent(data.id).then(function(student) {
           page.addEditToModal(student)
-          //   page.showModal()
         })
       }
       if (submitButton) {
         page.postNewStudent(page.extractFormData())
-        console.log('posted')
       }
       if (e.target.id === 'viewStudents') {
-        page.showStudents()
+        page.reloadStudents()
       }
       if (e.target.id === 'viewForm') {
         page.showForm()
-      }
-      if (closeButton) {
-        page.hideAllModals()
-        page.clearStudents()
-        page
-          .getStudents()
-          .then(students => page.addStudentsToPage(students.data))
       }
       if (editButton) {
         page.editStudent(page.extractEditFormData(data.id))
@@ -72,9 +64,11 @@ const page = {
   deleteStudentFromApi: function(studentId) {
     return fetch(`http://localhost:8000/students/${studentId}`, {
       method: 'DELETE'
-    }).then(function(res) {
-      return res.json()
     })
+      .then(function(res) {
+        return res.json()
+      })
+      .then(page.reloadStudents())
   },
   //API calls
   getStudents: function() {
@@ -102,8 +96,6 @@ const page = {
     <a class="editLink" href="#" data-id=${student._id}>Edit</a>
     </div>`
   },
-  //   <div class="modal-content">
-  //       <span class="close">&times;</span></div>
   detailTemplate: function(student) {
     return `
       <h1>${student.name}</h1>
@@ -203,14 +195,6 @@ const page = {
     document.getElementById('side').style.display = 'none'
     document.getElementById('addForm').style.display = 'block'
   },
-  //   hideAllModals: function() {
-  //     document.getElementById(`modal`).style.display = 'none'
-  //     // const $modals = document.querySelector('#modal')
-  //     // $modals.forEach(modal => (modal.style.display = 'none'))
-  //   },
-  //   showModal: function() {
-  //     document.getElementById(`modal`).style.display = 'block'
-  //   },
   clearStudents: function() {
     document.querySelector('#studentList').innerHTML = ''
   }
