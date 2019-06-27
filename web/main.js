@@ -114,21 +114,36 @@ const page = {
     return `
         <h1>Edit ${student.name}</h1>
         <form>
-          Name: <input type="text" name="name" class="id_${
+        <div class="row">
+          <div class="col-3">Name: </div><div class="col-3"><input type="text" name="name" class="id_${
             student._id
-          }" placeholder="Name" value="${student.name}" /><br>
-          Age: <input type="text" name="age" class="id_${
+          }" placeholder="Name" value="${student.name}" />
+          </div>
+          </div>
+          <div class="row">
+          <div class="col-3">
+          Age: </div><div class="col-3"><input type="text" name="age" class="id_${
             student._id
-          }" placeholder="Age" value="${student.age}" /><br>
-          Photo URL: <input type="text" name="photoUrl" class="id_${
+          }" placeholder="Age" value="${student.age}" />
+          </div>
+          </div>
+          <div class="row">
+          <div class="col-3">
+          Photo URL: </div><div class="col-3"><input type="text" name="photoUrl" class="id_${
             student._id
-          }" placeholder="Photo URL" value="${student.photoUrl}" /><br>
-          Bio: <textarea name="bio" class="id_${student._id}" value="">${
-      student.bio
-    }</textarea><br>
+          }" placeholder="Photo URL" value="${student.photoUrl}" />
+          </div>
+          </div>
+          <div class="row">
+          <div class="col-3">
+          Bio: </div><div class="col-3"><textarea name="bio" class="id_${
+            student._id
+          }" value="">${student.bio}</textarea></div>
+    </div>
+    <div class="row">
           <input type="submit" value="Edit Student" class="edit" data-id="${
             student._id
-          }" />
+          }" /></div>
         </form>`
   },
   postNewStudent: function(newStudent) {
