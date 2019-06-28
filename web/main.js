@@ -1,3 +1,5 @@
+//To run this on a local server, go to the file path in command line and run 'serve'. Sets up a server!
+
 const page = {
   //things we want to happen on pageload
   init: function() {
